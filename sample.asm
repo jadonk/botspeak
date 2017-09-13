@@ -1,0 +1,28 @@
+SET DIO[1],1
+WAIT 1200
+SET DIO[1],0
+WAIT 1200
+
+
+
+# Not sure why multiple newlines don't slurp into one
+
+SCRIPT
+SET DIO[1],1
+WAIT 1200
+SET DIO[1],0
+WAIT 1200
+GOTO 0
+ENDSCRIPT 
+RUN 0
+
+SET DIO[1],1
+SCRIPT
+SET DIO[1],1
+WAIT 1200
+SET DIO[1],0
+WAIT 1200
+ENDSCRIPT
+RUN 0
+SET DIO[1],1
+
