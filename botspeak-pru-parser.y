@@ -5,6 +5,8 @@
 #include "botspeak-pru-lexer.h"
 int yylex(void);
 void yyerror(const char*);
+
+char* instruction = "";
 %}
 
 %union {
@@ -64,7 +66,7 @@ programs
 program
 	: command
 		{
-			printf("command\n");
+			printf("command: %s\n", instruction);
 		}
 	| script
 		{
@@ -78,17 +80,23 @@ script
 
 commands 
 	: commands command
+		{
+			printf("script command: %s\n", instruction);
+		}
 	| command
+		{
+			printf("script command: %s\n", instruction);
+		}
 	;
 
 command
 	: TOKEN_ADD lval TOKEN_COMMA value eol
 		{
-			printf("add\n");
+			instruction = "add";
 		}
 	| TOKEN_SUB lval TOKEN_COMMA value eol
 		{
-			printf("sub\n");
+			instruction = "sub";
 		}
 	| TOKEN_MUL lval TOKEN_COMMA value eol
 	| TOKEN_DIV lval TOKEN_COMMA value eol
@@ -105,29 +113,29 @@ command
 	| TOKEN_BSR lval TOKEN_COMMA value eol
 	| TOKEN_GOTO value eol
 		{
-			printf("goto\n");
+			instruction = "goto";
 		}
 	| TOKEN_WAIT value eol
 		{
-			printf("wait\n");
+			instruction = "wait";
 		}
 	| TOKEN_GET value eol
 	| TOKEN_SET lval TOKEN_COMMA value eol
 		{
-			printf("set\n");
+			instruction = "set";
 		}
 	| TOKEN_IF expression TOKEN_GOTO TOKEN_NUM eol
 	| TOKEN_SYSTEM numbers eol
 	| TOKEN_RUN value eol
 		{
-			printf("run\n");
+			instruction = "run";
 		}
 	| TOKEN_RUN_WAIT value eol
 	| TOKEN_DEBUG value eol
 	| TOKEN_LBL lval eol
 	| eol
 		{
-			printf("dummy\n");
+			instruction = "";
 		}
 	;
 
