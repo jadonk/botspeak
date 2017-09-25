@@ -6,7 +6,8 @@
 int yylex(void);
 void yyerror(const char*);
 
-char* instruction = "";
+const char* ins_none = "";
+char* instruction;
 %}
 
 %union {
@@ -66,7 +67,9 @@ programs
 program
 	: command
 		{
-			printf("command: %s\n", instruction);
+			if(instruction != (char*)ins_none) {
+				printf("command: %s\n", instruction);
+			}
 		}
 	| script
 		{
@@ -81,11 +84,15 @@ script
 commands 
 	: commands command
 		{
-			printf("script command: %s\n", instruction);
+			if(instruction != (char*)ins_none) {
+				printf("script command: %s\n", instruction);
+			}
 		}
 	| command
 		{
-			printf("script command: %s\n", instruction);
+			if(instruction != (char*)ins_none) {
+				printf("script command: %s\n", instruction);
+			}
 		}
 	;
 
@@ -135,7 +142,7 @@ command
 	| TOKEN_LBL lval eol
 	| eol
 		{
-			instruction = "";
+			instruction = (char*)ins_none;
 		}
 	;
 
@@ -166,6 +173,7 @@ eol
 int main(int argc, char* argv[])
 {
 	int i = 0;
+	instruction = (char*)ins_none;
 	i = yyparse();
 	return i;
 }
